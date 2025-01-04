@@ -1,0 +1,13 @@
+main: ${GROUP}.${NAME}
+name: SimpleModelEngine
+version: "${VERSION}"
+api-version: "1.21.4"
+author: timtaran
+description: "Own model engine with blender animation support"
+
+dependencies:
+  server:
+    CommandAPI:
+      load: BEFORE
+      required: true
+      join-classpath: true
