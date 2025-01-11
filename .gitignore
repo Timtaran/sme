@@ -5,7 +5,10 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
-.idea/
+.idea/*
+!.idea/discord.xml
+!.idea/runConfigurations
+!.idea/.gitignore
 *.iws
 *.iml
 *.ipr
@@ -37,3 +40,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Dev Shit ###
+server/
+temp/

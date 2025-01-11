@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("io.freefair.lombok") version "8.11"
     checkstyle
 }
 
@@ -24,14 +25,21 @@ repositories {
 }
 
 dependencies {
+    implementation("org.spongepowered:configurate-yaml:4.0.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.1")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("dev.jorel:commandapi-bukkit-core:9.7.0")
+
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
 }
 
 configurations.checkstyle {
@@ -48,6 +56,15 @@ tasks.processResources {
             "GROUP" to project.group
         )
     }
+}
+
+tasks.jar {
+    val customJarDir: String? = System.getenv("CUSTOM_JAR_DIR")  // for server testing
+    destinationDirectory.set(if (customJarDir != null) {
+        file(customJarDir)
+    } else {
+        file("build/libs") // Default build directory
+    })
 }
 
 java {
