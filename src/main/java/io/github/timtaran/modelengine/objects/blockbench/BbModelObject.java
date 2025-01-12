@@ -1,12 +1,15 @@
 package io.github.timtaran.modelengine.objects.blockbench;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.Arrays;
-import java.util.HashMap;
-
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import io.github.timtaran.modelengine.utils.GetterFunction;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -26,6 +29,12 @@ public class BbModelObject {
   private boolean unusualResolution = false;
   private double uvMultiplier = 1;
 
+  @Getter(AccessLevel.NONE)
+  private Cache<Object, Object> cache =
+      CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build();
+
+  private ArrayList<String> allGroups;
+
   @JsonSetter("resolution")
   private void setResolution(ResolutionObject resolution) {
     this.resolution = resolution;
@@ -37,16 +46,36 @@ public class BbModelObject {
     }
   }
 
-  @Getter(AccessLevel.NONE)
-  private final HashMap<Object, Object> cachedHashMap = new HashMap<>();
+  private void processOutliner(OutlinerObject[] outliner, String group) {
+    if (!group.isEmpty()) {
+      allGroups.add(group);
+      group += "_";
+    }
+
+    for (OutlinerObject outlinerObject : outliner) {
+      if (!outlinerObject.isObject()) {
+        processOutliner(outlinerObject.getChildren(), group + outlinerObject.getName());
+      }
+    }
+  }
+
+  public List<String> getAllGroups() {
+    if (allGroups == null) {
+      allGroups = new ArrayList<>();
+      processOutliner(outliner, "");
+    }
+
+    return Collections.unmodifiableList(allGroups);
+  }
 
   /**
-   * Converts array of some objects into {@link HashMap<>} and caches result
+   * Converts array of some objects into {@link HashMap} and caches result
    *
-   * @return {@link HashMap<>} lombok(?) func -> {@link HashMap<>}
+   * @return {@link HashMap} lombok(?) func -> {@link HashMap}
    */
-  private <T> HashMap<String, T> generateObjectsHashMap(GetterFunction<T> getterFunction, T[] instance, String key) {
-    Object value = cachedHashMap.get(key);
+  private <T> HashMap<String, T> generateObjectsHashMap(
+      GetterFunction<T> getterFunction, T[] instance, String key) {
+    Object value = cache.getIfPresent(key);
     if (value == null) {
       HashMap<String, T> tempHashMap = new HashMap<>();
 
@@ -55,7 +84,7 @@ public class BbModelObject {
       }
 
       value = tempHashMap;
-      cachedHashMap.put(key, tempHashMap);
+      cache.put(key, tempHashMap);
     }
 
     //noinspection unchecked
@@ -64,6 +93,7 @@ public class BbModelObject {
 
   /**
    * {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}
+   *
    * @return {@link HashMap<>} {@link ElementObject#getUuid()} -> {@link ElementObject}
    */
   public HashMap<String, ElementObject> getElementsAsUuidHashMap() {
@@ -72,6 +102,7 @@ public class BbModelObject {
 
   /**
    * {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}
+   *
    * @return {@link HashMap<>} {@link TextureObject#getUuid()} -> {@link TextureObject}
    */
   public HashMap<String, TextureObject> getTexturesAsUuidHashMap() {
@@ -80,6 +111,7 @@ public class BbModelObject {
 
   /**
    * {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}
+   *
    * @return {@link HashMap<>} {@link TextureObject#getId()} -> {@link TextureObject}
    */
   public HashMap<String, TextureObject> getTexturesAsIdHashMap() {
