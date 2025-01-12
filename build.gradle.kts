@@ -27,6 +27,7 @@ repositories {
 dependencies {
     implementation("org.spongepowered:configurate-yaml:4.0.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.1")
+    implementation("com.google.guava:guava:33.4.0-jre")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("dev.jorel:commandapi-bukkit-core:9.7.0")
 
