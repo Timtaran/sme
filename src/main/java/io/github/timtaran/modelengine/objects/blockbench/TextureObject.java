@@ -11,10 +11,4 @@ public class TextureObject {
   private String name;
   private String uuid;
   private String source;
-
-  private String width;
-  private String height;
-
-  private String uv_width;
-  private String uv_height;
 }
