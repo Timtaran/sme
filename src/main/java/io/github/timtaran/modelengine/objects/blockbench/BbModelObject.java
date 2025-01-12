@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+/** Blockbench model object. */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings({"unused", "FieldMayBeFinal"})
 @Getter
@@ -59,6 +60,11 @@ public class BbModelObject {
     }
   }
 
+  /**
+   * All model's groups in format `group1_subgroup_subsubgroup`.
+   *
+   * @return List of all model's groups
+   */
   public List<String> getAllGroups() {
     if (allGroups == null) {
       allGroups = new ArrayList<>();
@@ -69,7 +75,7 @@ public class BbModelObject {
   }
 
   /**
-   * Converts array of some objects into {@link HashMap} and caches result
+   * Converts array of some objects into {@link HashMap} and caches result.
    *
    * @return {@link HashMap} lombok(?) func -> {@link HashMap}
    */
@@ -92,27 +98,27 @@ public class BbModelObject {
   }
 
   /**
-   * {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}
+   * Uses {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}.
    *
-   * @return {@link HashMap<>} {@link ElementObject#getUuid()} -> {@link ElementObject}
+   * @return {@link HashMap} {@link ElementObject#getUuid()} -> {@link ElementObject}
    */
   public HashMap<String, ElementObject> getElementsAsUuidHashMap() {
     return generateObjectsHashMap(ElementObject::getUuid, elements, "elements_uuid");
   }
 
   /**
-   * {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}
+   * Uses {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}.
    *
-   * @return {@link HashMap<>} {@link TextureObject#getUuid()} -> {@link TextureObject}
+   * @return {@link HashMap} {@link TextureObject#getUuid()} -> {@link TextureObject}
    */
   public HashMap<String, TextureObject> getTexturesAsUuidHashMap() {
     return generateObjectsHashMap(TextureObject::getUuid, textures, "textures_uuid");
   }
 
   /**
-   * {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}
+   * Uses {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}.
    *
-   * @return {@link HashMap<>} {@link TextureObject#getId()} -> {@link TextureObject}
+   * @return {@link HashMap} {@link TextureObject#getId()} -> {@link TextureObject}
    */
   public HashMap<String, TextureObject> getTexturesAsIdHashMap() {
     return generateObjectsHashMap(TextureObject::getId, textures, "textures_id");

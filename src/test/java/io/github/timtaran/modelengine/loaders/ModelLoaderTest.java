@@ -4,10 +4,10 @@ import io.github.timtaran.modelengine.objects.ModelObject;
 import io.github.timtaran.modelengine.objects.blockbench.BbModelObject;
 import io.github.timtaran.modelengine.objects.blockbench.ElementObject;
 import io.github.timtaran.modelengine.objects.blockbench.OutlinerObject;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
+/** Checks is model loading works as expected. */
 public class ModelLoaderTest {
   @Test
   public void test() throws Exception {
@@ -36,7 +36,13 @@ public class ModelLoaderTest {
 
     assert bbModel.getTextures().length == 1;
 
-    assert bbModel.getElementsAsUuidHashMap().get("e773a194-e877-5c33-faf6-bf06deec370f").equals(elementObject2);
-    assert bbModel.getTexturesAsUuidHashMap().get("44aa83df-e1a3-43aa-3d5f-5a16f3ba1284").equals(bbModel.getTextures()[0]);
+    assert bbModel
+        .getElementsAsUuidHashMap()
+        .get("e773a194-e877-5c33-faf6-bf06deec370f")
+        .equals(elementObject2);
+    assert bbModel
+        .getTexturesAsUuidHashMap()
+        .get("44aa83df-e1a3-43aa-3d5f-5a16f3ba1284")
+        .equals(bbModel.getTextures()[0]);
   }
 }

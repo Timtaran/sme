@@ -7,15 +7,26 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.timtaran.modelengine.Plugin;
 import io.github.timtaran.modelengine.loaders.ModelLoader;
 import io.github.timtaran.modelengine.objects.ModelObject;
-import io.github.timtaran.modelengine.objects.blockbench.*;
+import io.github.timtaran.modelengine.objects.blockbench.BbModelObject;
+import io.github.timtaran.modelengine.objects.blockbench.ElementObject;
+import io.github.timtaran.modelengine.objects.blockbench.FaceObject;
+import io.github.timtaran.modelengine.objects.blockbench.OutlinerObject;
+import io.github.timtaran.modelengine.objects.blockbench.TextureObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Objects;
 
+/**
+ * Pack generator class. Saves at pack folder with `sme` namespace and can be used via
+ * `minecraft:item_mode` variable.
+ */
 public class PackGenerator {
   private final Path basePath; // for testing purposes
   private Path namespacePath;
@@ -31,10 +42,15 @@ public class PackGenerator {
     this.basePath = basePath;
   }
 
+  /**
+   * Generate pack with all models from loadedModels. Saves at pack folder with `sme` namespace and
+   * can be used via * `minecraft:item_mode` variable.
+   */
   public void generatePack() throws URISyntaxException, IOException {
     if (!basePath.resolve("pack.mcmeta").toFile().exists()) {
       Files.copy(
-              Objects.requireNonNull(PackGenerator.class.getClassLoader().getResourceAsStream("pack/pack.mcmeta")),
+          Objects.requireNonNull(
+              PackGenerator.class.getClassLoader().getResourceAsStream("pack/pack.mcmeta")),
           basePath.resolve("pack.mcmeta"));
     }
 
@@ -95,7 +111,7 @@ public class PackGenerator {
   }
 
   private void processOutliner(
-      OutlinerObject[] outlinerObjects, BbModelObject bbModelObject, String file_suffix)
+      OutlinerObject[] outlinerObjects, BbModelObject bbModelObject, String fileName)
       throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     ObjectNode modelNode = objectMapper.createObjectNode();
@@ -161,7 +177,8 @@ public class PackGenerator {
             texturesNode.put(
                 textureId,
                 String.format(
-                    "sme:item/%s", bbModelObject.getTexturesAsIdHashMap().get(textureId).getName()));
+                    "sme:item/%s",
+                    bbModelObject.getTexturesAsIdHashMap().get(textureId).getName()));
           }
           faceNode.put("texture", String.format("#%s", textureId));
           facesNode.set(faceName, faceNode);
@@ -171,9 +188,7 @@ public class PackGenerator {
         elementsNode.add(elementNode);
       } else {
         processOutliner(
-            outlinerObject.getChildren(),
-            bbModelObject,
-            file_suffix + "_" + outlinerObject.getName());
+            outlinerObject.getChildren(), bbModelObject, fileName + "_" + outlinerObject.getName());
       }
     }
 
@@ -182,10 +197,9 @@ public class PackGenerator {
     ObjectNode itemNode = objectMapper.createObjectNode();
     ObjectNode itemModelNode = objectMapper.createObjectNode();
     itemModelNode.put("type", "minecraft:model");
-    itemModelNode.put("model", "sme:item/" + bbModelObject.getName() + file_suffix);
+    itemModelNode.put("model", "sme:item/" + bbModelObject.getName() + fileName);
 
     itemNode.set("model", jsonNodeFactory.pojoNode(itemModelNode));
-
 
     if (!elementsNode.isEmpty()) {
       objectMapper
@@ -193,18 +207,18 @@ public class PackGenerator {
           .writeValue(
               new File(
                   modelsPath
-                      .resolve(String.format("%s%s.json", bbModelObject.getName(), file_suffix))
+                      .resolve(String.format("%s%s.json", bbModelObject.getName(), fileName))
                       .toString()),
               modelNode);
 
       objectMapper
-              .writer()
-              .writeValue(
-                      new File(
-                              itemsPath
-                                      .resolve(String.format("%s%s.json", bbModelObject.getName(), file_suffix))
-                                      .toString()),
-                      itemNode);
+          .writer()
+          .writeValue(
+              new File(
+                  itemsPath
+                      .resolve(String.format("%s%s.json", bbModelObject.getName(), fileName))
+                      .toString()),
+              itemNode);
     }
   }
 }

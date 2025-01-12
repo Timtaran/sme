@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.stream.Stream;
 import lombok.Getter;
 
+/** Model loader class. */
 public class ModelLoader {
   @Getter private static final HashMap<String, ModelObject> loadedModels = new HashMap<>();
 
@@ -50,7 +51,7 @@ public class ModelLoader {
   }
 
   /**
-   * Converts filename into {@link InputStream} and loads it via {@link #loadModel(InputStream)}
+   * Converts filename into {@link InputStream} and loads it via {@link #loadModel(InputStream)}.
    *
    * @param filename filename to be converted into {@link InputStream} and loaded
    * @return {@link ModelObject} loaded model
@@ -62,7 +63,7 @@ public class ModelLoader {
 
   /**
    * Loads model from given {@link InputStream}, adds it to {@link ModelLoader#loadedModels} and
-   * returns
+   * returns.
    *
    * @param inputStream model data {@link InputStream}
    * @return {@link ModelObject} loaded model

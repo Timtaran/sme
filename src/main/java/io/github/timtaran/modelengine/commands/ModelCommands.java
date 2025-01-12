@@ -28,7 +28,7 @@ public class ModelCommands {
 
     ModelObject modelObject = ModelLoader.getLoadedModels().get(modelName);
     if (modelObject != null) {
-
+      sender.sendMessage("Work in progress...");
     } else {
       sender.sendMessage(Component.text("Model not found", NamedTextColor.RED));
     }

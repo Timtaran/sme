@@ -3,6 +3,7 @@ package io.github.timtaran.modelengine.objects.blockbench;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 
+/** Texture object class. */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings("unused")
 @Getter

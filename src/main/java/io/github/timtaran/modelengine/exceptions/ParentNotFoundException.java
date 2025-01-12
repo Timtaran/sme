@@ -13,8 +13,7 @@ public class ParentNotFoundException extends Exception {
     this.parentName = parentName;
   }
 
-  public ParentNotFoundException(String message, String parentName)
-  {
+  public ParentNotFoundException(String message, String parentName) {
     super(message);
     this.parentName = parentName;
   }
