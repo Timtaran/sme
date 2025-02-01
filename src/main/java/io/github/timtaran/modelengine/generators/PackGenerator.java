@@ -12,6 +12,8 @@ import io.github.timtaran.modelengine.objects.blockbench.ElementObject;
 import io.github.timtaran.modelengine.objects.blockbench.FaceObject;
 import io.github.timtaran.modelengine.objects.blockbench.OutlinerObject;
 import io.github.timtaran.modelengine.objects.blockbench.TextureObject;
+import io.github.timtaran.modelengine.utils.ArrayUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -107,12 +109,16 @@ public class PackGenerator {
   }
 
   private void generateModels(BbModelObject bbModelObject) throws IOException {
-    processOutliner(bbModelObject.getOutliner(), bbModelObject, "");
+    processOutliner(bbModelObject.getOutliner(), bbModelObject, new double[]{0, 0, 0}, "");
   }
 
   private void processOutliner(
-      OutlinerObject[] outlinerObjects, BbModelObject bbModelObject, String fileName)
+      OutlinerObject[] outlinerObjects, BbModelObject bbModelObject, double[] offset, String fileName)
       throws IOException {
+    if (bbModelObject.isJavaModel()) {
+      offset = ArrayUtils.subtract(offset, new double[] {8, 0, 8});
+    }
+
     ObjectMapper objectMapper = new ObjectMapper();
     ObjectNode modelNode = objectMapper.createObjectNode();
 
@@ -131,15 +137,15 @@ public class PackGenerator {
       if (outlinerObject.isObject()) {
         ElementObject elementObject = elements.get(outlinerObject.getUuid());
         ObjectNode elementNode = objectMapper.createObjectNode();
-        elementNode.set("from", jsonNodeFactory.pojoNode(elementObject.getFrom()));
-        elementNode.set("to", jsonNodeFactory.pojoNode(elementObject.getTo()));
+        elementNode.set("from", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getFrom(), offset)));
+        elementNode.set("to", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getTo(), offset)));
 
         ObjectNode rotationNode = objectMapper.createObjectNode();
-        int angle = 0;
+        double angle = 0;
         String axis = "y";
 
-        int[] rotation = elementObject.getRotation();
-        if (!Arrays.equals(rotation, new int[] {0, 0, 0})) {
+        double[] rotation = elementObject.getRotation();
+        if (!Arrays.equals(rotation, new double[] {0, 0, 0})) {
           for (int i = 0; i < 3; i++) {
             if (rotation[i] != 0) {
               angle = rotation[i];
@@ -150,7 +156,7 @@ public class PackGenerator {
 
         rotationNode.put("angle", angle);
         rotationNode.put("axis", axis);
-        rotationNode.set("origin", jsonNodeFactory.pojoNode(elementObject.getOrigin()));
+        rotationNode.set("origin", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getFrom(), offset)));
         elementNode.set("rotation", rotationNode);
 
         ObjectNode facesNode = objectMapper.createObjectNode();
@@ -188,7 +194,7 @@ public class PackGenerator {
         elementsNode.add(elementNode);
       } else {
         processOutliner(
-            outlinerObject.getChildren(), bbModelObject, fileName + "_" + outlinerObject.getName());
+            outlinerObject.getChildren(), bbModelObject, outlinerObject.getOrigin(), fileName + "_" + outlinerObject.getName());
       }
     }
 

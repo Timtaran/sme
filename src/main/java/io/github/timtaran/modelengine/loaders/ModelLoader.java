@@ -50,6 +50,11 @@ public class ModelLoader {
     }
   }
 
+  /** Clears {@link ModelLoader#loadedModels} */
+  public static void unloadModels() {
+    ModelLoader.loadedModels.clear();
+  }
+
   /**
    * Converts filename into {@link InputStream} and loads it via {@link #loadModel(InputStream)}.
    *
