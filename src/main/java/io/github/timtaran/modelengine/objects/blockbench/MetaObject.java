@@ -1,13 +1,13 @@
 package io.github.timtaran.modelengine.objects.blockbench;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-/** Face object class. */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "FieldMayBeFinal"})
 @Getter
-public class FaceObject {
-  private int[] uv;
-  private int texture;
+public class MetaObject {
+  @JsonProperty("model_format")
+  private String modelFormat;
 }

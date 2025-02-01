@@ -18,6 +18,8 @@ import lombok.Getter;
 @SuppressWarnings({"unused", "FieldMayBeFinal"})
 @Getter
 public class BbModelObject {
+  private MetaObject meta;
+
   private String name;
   private String parent;
 
@@ -48,8 +50,9 @@ public class BbModelObject {
   }
 
   private void processOutliner(OutlinerObject[] outliner, String group) {
+    allGroups.add(group);
+
     if (!group.isEmpty()) {
-      allGroups.add(group);
       group += "_";
     }
 
@@ -122,5 +125,12 @@ public class BbModelObject {
    */
   public HashMap<String, TextureObject> getTexturesAsIdHashMap() {
     return generateObjectsHashMap(TextureObject::getId, textures, "textures_id");
+  }
+
+  /**
+   * @return Is model `java_block` or not
+   */
+  public boolean isJavaModel() {
+    return meta.getModelFormat().equals("java_model");
   }
 }

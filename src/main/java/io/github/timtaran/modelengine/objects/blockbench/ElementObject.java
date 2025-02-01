@@ -11,10 +11,10 @@ import lombok.Getter;
 public class ElementObject {
   private String name;
   private String uuid;
-  private int[] from;
-  private int[] to;
-  private int[] rotation = {0, 0, 0};
-  private int[] origin;
+  private double[] from;
+  private double[] to;
+  private double[] rotation = {0, 0, 0};
+  private double[] origin;
 
   private HashMap<String, FaceObject> faces;
 }

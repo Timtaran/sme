@@ -5,12 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 
 /** Outliner object class. */
-@SuppressWarnings("FieldMayBeFinal")
+@SuppressWarnings({"FieldMayBeFinal", "unused"})
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class OutlinerObject {
   private String name = "";
   private String uuid;
+  private double[] origin;
 
   private OutlinerObject[] children = new OutlinerObject[0];
 
