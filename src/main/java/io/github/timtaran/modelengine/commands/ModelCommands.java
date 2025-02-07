@@ -61,7 +61,9 @@ public class ModelCommands {
                         .add(
                             group.origin()[0] * -0.0625,
                             group.origin()[1] * 0.0625,
-                            group.origin()[2] * -0.0625),
+                            group.origin()[2]
+                                * -0.0625), // Using negative multiply to create offset otherwise
+                                            // model would be broken,
                     ItemDisplay.class);
 
         ItemStack itemStack = new ItemStack(Material.STICK);
