@@ -108,15 +108,19 @@ public class PackGenerator {
   }
 
   private void generateModels(BbModelObject bbModelObject) throws IOException {
-    processOutliner(bbModelObject.getOutliner(), bbModelObject, new double[]{0, 0, 0}, "");
+    processOutliner(bbModelObject.getOutliner(), bbModelObject, new double[] {0, 0, 0}, "");
   }
 
   private void processOutliner(
-      OutlinerObject[] outlinerObjects, BbModelObject bbModelObject, double[] offset, String fileName)
+      OutlinerObject[] outlinerObjects,
+      BbModelObject bbModelObject,
+      double[] offset,
+      String fileName)
       throws IOException {
 
     if (!bbModelObject.isJavaModel()) {
-      offset = ArrayUtils.subtract(offset, new double[] {8, 8, 8});  // blockbench auto offset java models
+      offset =
+          ArrayUtils.subtract(offset, new double[] {8, 8, 8}); // blockbench auto offset java models
     }
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -138,8 +142,10 @@ public class PackGenerator {
         ElementObject elementObject = elements.get(outlinerObject.getUuid());
         ObjectNode elementNode = objectMapper.createObjectNode();
 
-        elementNode.set("from", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getFrom(), offset)));
-        elementNode.set("to", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getTo(), offset)));
+        elementNode.set(
+            "from", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getFrom(), offset)));
+        elementNode.set(
+            "to", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getTo(), offset)));
 
         ObjectNode rotationNode = objectMapper.createObjectNode();
         double angle = 0;
@@ -157,7 +163,9 @@ public class PackGenerator {
 
         rotationNode.put("angle", angle);
         rotationNode.put("axis", axis);
-        rotationNode.set("origin", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getOrigin(), offset)));
+        rotationNode.set(
+            "origin",
+            jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getOrigin(), offset)));
         elementNode.set("rotation", rotationNode);
 
         ObjectNode facesNode = objectMapper.createObjectNode();
@@ -193,7 +201,10 @@ public class PackGenerator {
         elementsNode.add(elementNode);
       } else {
         processOutliner(
-            outlinerObject.getChildren(), bbModelObject, outlinerObject.getOrigin(), fileName + "_" + outlinerObject.getName());
+            outlinerObject.getChildren(),
+            bbModelObject,
+            outlinerObject.getOrigin(),
+            fileName + "_" + outlinerObject.getName());
       }
     }
 
