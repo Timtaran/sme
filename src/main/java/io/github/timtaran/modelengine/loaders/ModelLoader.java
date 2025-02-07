@@ -50,7 +50,7 @@ public class ModelLoader {
     }
   }
 
-  /** Clears {@link ModelLoader#loadedModels} */
+  /** Clears {@link ModelLoader#loadedModels}. */
   public static void unloadModels() {
     ModelLoader.loadedModels.clear();
   }

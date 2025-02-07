@@ -58,7 +58,9 @@ public class BbModelObject {
             outlinerObject.getChildren(),
             group + "_" + outlinerObject.getName(),
             outlinerObject.getOrigin());
-      } else isObjectsInside = true;
+      } else {
+        isObjectsInside = true;
+      }
     }
 
     if (isObjectsInside) {
@@ -67,7 +69,7 @@ public class BbModelObject {
   }
 
   /**
-   * All model's groups list of {@link GroupObject}
+   * All model's groups list of {@link GroupObject}.
    *
    * @return List of all model's groups
    */
@@ -131,6 +133,8 @@ public class BbModelObject {
   }
 
   /**
+   * Checks is model `java_block` or not.
+   *
    * @return Is model `java_block` or not
    */
   public boolean isJavaModel() {
