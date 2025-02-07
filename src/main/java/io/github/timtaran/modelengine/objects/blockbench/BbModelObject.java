@@ -36,7 +36,7 @@ public class BbModelObject {
   private Cache<Object, Object> cache =
       CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build();
 
-  private ArrayList<String> allGroups;
+  private ArrayList<GroupObject> allGroups;
 
   @JsonSetter("resolution")
   private void setResolution(ResolutionObject resolution) {
@@ -49,29 +49,32 @@ public class BbModelObject {
     }
   }
 
-  private void processOutliner(OutlinerObject[] outliner, String group) {
-    allGroups.add(group);
-
-    if (!group.isEmpty()) {
-      group += "_";
-    }
+  private void processOutliner(OutlinerObject[] outliner, String group, double[] offset) {
+    boolean isObjectsInside = false;
 
     for (OutlinerObject outlinerObject : outliner) {
       if (!outlinerObject.isObject()) {
-        processOutliner(outlinerObject.getChildren(), group + outlinerObject.getName());
-      }
+        processOutliner(
+            outlinerObject.getChildren(),
+            group + "_" + outlinerObject.getName(),
+            outlinerObject.getOrigin());
+      } else isObjectsInside = true;
+    }
+
+    if (isObjectsInside) {
+      allGroups.add(new GroupObject(group, offset));
     }
   }
 
   /**
-   * All model's groups in format `group1_subgroup_subsubgroup`.
+   * All model's groups list of {@link GroupObject}
    *
    * @return List of all model's groups
    */
-  public List<String> getAllGroups() {
+  public List<GroupObject> getAllGroups() {
     if (allGroups == null) {
       allGroups = new ArrayList<>();
-      processOutliner(outliner, "");
+      processOutliner(outliner, name, new double[] {0, 0, 0});
     }
 
     return Collections.unmodifiableList(allGroups);
@@ -131,6 +134,6 @@ public class BbModelObject {
    * @return Is model `java_block` or not
    */
   public boolean isJavaModel() {
-    return meta.getModelFormat().equals("java_model");
+    return meta.getModelFormat().equals("java_block");
   }
 }

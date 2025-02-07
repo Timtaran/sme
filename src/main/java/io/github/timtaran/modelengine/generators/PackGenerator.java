@@ -13,7 +13,6 @@ import io.github.timtaran.modelengine.objects.blockbench.FaceObject;
 import io.github.timtaran.modelengine.objects.blockbench.OutlinerObject;
 import io.github.timtaran.modelengine.objects.blockbench.TextureObject;
 import io.github.timtaran.modelengine.utils.ArrayUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -115,8 +114,9 @@ public class PackGenerator {
   private void processOutliner(
       OutlinerObject[] outlinerObjects, BbModelObject bbModelObject, double[] offset, String fileName)
       throws IOException {
-    if (bbModelObject.isJavaModel()) {
-      offset = ArrayUtils.subtract(offset, new double[] {8, 0, 8});
+
+    if (!bbModelObject.isJavaModel()) {
+      offset = ArrayUtils.subtract(offset, new double[] {8, 8, 8});  // blockbench auto offset java models
     }
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -137,6 +137,7 @@ public class PackGenerator {
       if (outlinerObject.isObject()) {
         ElementObject elementObject = elements.get(outlinerObject.getUuid());
         ObjectNode elementNode = objectMapper.createObjectNode();
+
         elementNode.set("from", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getFrom(), offset)));
         elementNode.set("to", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getTo(), offset)));
 
@@ -156,15 +157,13 @@ public class PackGenerator {
 
         rotationNode.put("angle", angle);
         rotationNode.put("axis", axis);
-        rotationNode.set("origin", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getFrom(), offset)));
+        rotationNode.set("origin", jsonNodeFactory.pojoNode(ArrayUtils.subtract(elementObject.getOrigin(), offset)));
         elementNode.set("rotation", rotationNode);
 
         ObjectNode facesNode = objectMapper.createObjectNode();
 
         HashMap<String, FaceObject> faces = elementObject.getFaces();
-        System.out.println(faces);
         for (String faceName : faces.keySet()) {
-          System.out.println(faceName);
           FaceObject faceObject = faces.get(faceName);
           ObjectNode faceNode = objectMapper.createObjectNode();
 
