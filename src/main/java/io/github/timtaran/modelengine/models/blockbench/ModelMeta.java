@@ -1,4 +1,4 @@
-package io.github.timtaran.modelengine.objects.blockbench;
+package io.github.timtaran.modelengine.models.blockbench;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +8,7 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings({"unused", "FieldMayBeFinal"})
 @Getter
-public class MetaObject {
+public class ModelMeta {
   @JsonProperty("model_format")
   private String modelFormat;
 }

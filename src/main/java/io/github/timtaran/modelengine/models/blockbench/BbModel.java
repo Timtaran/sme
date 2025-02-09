@@ -1,4 +1,4 @@
-package io.github.timtaran.modelengine.objects.blockbench;
+package io.github.timtaran.modelengine.models.blockbench;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -17,17 +17,17 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings({"unused", "FieldMayBeFinal"})
 @Getter
-public class BbModelObject {
-  private MetaObject meta;
+public class BbModel {
+  private ModelMeta meta;
 
   private String name;
   private String parent;
 
-  private ResolutionObject resolution;
+  private ModelResolution resolution;
 
-  private TextureObject[] textures;
-  private OutlinerObject[] outliner;
-  private ElementObject[] elements;
+  private ModelTexture[] textures;
+  private ModelOutliner[] outliner;
+  private ModelElement[] elements;
 
   private boolean unusualResolution = false;
   private double uvMultiplier = 1;
@@ -36,10 +36,10 @@ public class BbModelObject {
   private Cache<Object, Object> cache =
       CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build();
 
-  private ArrayList<GroupObject> allGroups;
+  private ArrayList<ModelGroup> allGroups;
 
   @JsonSetter("resolution")
-  private void setResolution(ResolutionObject resolution) {
+  private void setResolution(ModelResolution resolution) {
     this.resolution = resolution;
 
     if (resolution.getWidth() != 16 || resolution.getHeight() != 16) {
@@ -49,14 +49,14 @@ public class BbModelObject {
     }
   }
 
-  private void processOutliner(OutlinerObject[] outliner, String group, double[] offset) {
+  private void processOutliner(ModelOutliner[] outliner, String bone_name, double[] offset) {
     boolean isObjectsInside = false;
 
-    for (OutlinerObject outlinerObject : outliner) {
+    for (ModelOutliner outlinerObject : outliner) {
       if (!outlinerObject.isObject()) {
         processOutliner(
             outlinerObject.getChildren(),
-            group + "_" + outlinerObject.getName(),
+            outlinerObject.getName(),
             outlinerObject.getOrigin());
       } else {
         isObjectsInside = true;
@@ -64,16 +64,16 @@ public class BbModelObject {
     }
 
     if (isObjectsInside) {
-      allGroups.add(new GroupObject(group, offset));
+      allGroups.add(new ModelGroup(name + "_" + bone_name, offset));
     }
   }
 
   /**
-   * All model's groups list of {@link GroupObject}.
+   * All model's groups list of {@link ModelGroup}.
    *
    * @return List of all model's groups
    */
-  public List<GroupObject> getAllGroups() {
+  public List<ModelGroup> getAllGroups() {
     if (allGroups == null) {
       allGroups = new ArrayList<>();
       processOutliner(outliner, name, new double[] {0, 0, 0});
@@ -106,30 +106,30 @@ public class BbModelObject {
   }
 
   /**
-   * Uses {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}.
+   * Uses {@link BbModel#generateObjectsHashMap(GetterFunction, Object[], String)}.
    *
-   * @return {@link HashMap} {@link ElementObject#getUuid()} -> {@link ElementObject}
+   * @return {@link HashMap} {@link ModelElement#getUuid()} -> {@link ModelElement}
    */
-  public HashMap<String, ElementObject> getElementsAsUuidHashMap() {
-    return generateObjectsHashMap(ElementObject::getUuid, elements, "elements_uuid");
+  public HashMap<String, ModelElement> getElementsAsUuidHashMap() {
+    return generateObjectsHashMap(ModelElement::getUuid, elements, "elements_uuid");
   }
 
   /**
-   * Uses {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}.
+   * Uses {@link BbModel#generateObjectsHashMap(GetterFunction, Object[], String)}.
    *
-   * @return {@link HashMap} {@link TextureObject#getUuid()} -> {@link TextureObject}
+   * @return {@link HashMap} {@link ModelTexture#getUuid()} -> {@link ModelTexture}
    */
-  public HashMap<String, TextureObject> getTexturesAsUuidHashMap() {
-    return generateObjectsHashMap(TextureObject::getUuid, textures, "textures_uuid");
+  public HashMap<String, ModelTexture> getTexturesAsUuidHashMap() {
+    return generateObjectsHashMap(ModelTexture::getUuid, textures, "textures_uuid");
   }
 
   /**
-   * Uses {@link BbModelObject#generateObjectsHashMap(GetterFunction, Object[], String)}.
+   * Uses {@link BbModel#generateObjectsHashMap(GetterFunction, Object[], String)}.
    *
-   * @return {@link HashMap} {@link TextureObject#getId()} -> {@link TextureObject}
+   * @return {@link HashMap} {@link ModelTexture#getId()} -> {@link ModelTexture}
    */
-  public HashMap<String, TextureObject> getTexturesAsIdHashMap() {
-    return generateObjectsHashMap(TextureObject::getId, textures, "textures_id");
+  public HashMap<String, ModelTexture> getTexturesAsIdHashMap() {
+    return generateObjectsHashMap(ModelTexture::getId, textures, "textures_id");
   }
 
   /**

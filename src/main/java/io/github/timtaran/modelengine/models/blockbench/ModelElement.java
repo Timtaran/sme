@@ -1,4 +1,4 @@
-package io.github.timtaran.modelengine.objects.blockbench;
+package io.github.timtaran.modelengine.models.blockbench;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings({"unused", "FieldMayBeFinal"})
 @Getter
-public class ElementObject {
+public class ModelElement {
   private String name;
   private String uuid;
   private double[] from;
@@ -16,5 +16,5 @@ public class ElementObject {
   private double[] rotation = {0, 0, 0};
   private double[] origin;
 
-  private HashMap<String, FaceObject> faces;
+  private HashMap<String, TextureFace> faces;
 }

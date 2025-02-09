@@ -2,8 +2,8 @@ package io.github.timtaran.modelengine.loaders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.timtaran.modelengine.Plugin;
-import io.github.timtaran.modelengine.objects.ModelObject;
-import io.github.timtaran.modelengine.objects.blockbench.BbModelObject;
+import io.github.timtaran.modelengine.models.Model;
+import io.github.timtaran.modelengine.models.blockbench.BbModel;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import lombok.Getter;
 
 /** Model loader class. */
 public class ModelLoader {
-  @Getter private static final HashMap<String, ModelObject> loadedModels = new HashMap<>();
+  @Getter private static final HashMap<String, Model> loadedModels = new HashMap<>();
 
   /**
    * Loads all .bbmodel files in the plugin/PluginName models folder.
@@ -59,10 +59,10 @@ public class ModelLoader {
    * Converts filename into {@link InputStream} and loads it via {@link #loadModel(InputStream)}.
    *
    * @param filename filename to be converted into {@link InputStream} and loaded
-   * @return {@link ModelObject} loaded model
+   * @return {@link Model} loaded model
    * @throws IOException when failed to create {@link InputStream} or failed to read model data
    */
-  public static ModelObject loadModel(Path filename) throws IOException {
+  public static Model loadModel(Path filename) throws IOException {
     return loadModel(new BufferedInputStream(new FileInputStream(filename.toFile())));
   }
 
@@ -71,16 +71,16 @@ public class ModelLoader {
    * returns.
    *
    * @param inputStream model data {@link InputStream}
-   * @return {@link ModelObject} loaded model
+   * @return {@link Model} loaded model
    * @throws IOException when failed to read model data
    */
-  public static ModelObject loadModel(InputStream inputStream) throws IOException {
+  public static Model loadModel(InputStream inputStream) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
-    BbModelObject bbModelObject = mapper.readValue(inputStream, BbModelObject.class);
-    ModelObject modelObject = new ModelObject(bbModelObject.getName(), bbModelObject);
+    BbModel bbModel = mapper.readValue(inputStream, BbModel.class);
+    Model model = new Model(bbModel.getName(), bbModel);
 
-    loadedModels.put(bbModelObject.getName(), modelObject);
+    loadedModels.put(bbModel.getName(), model);
 
-    return new ModelObject(bbModelObject.getName(), bbModelObject);
+    return new Model(bbModel.getName(), bbModel);
   }
 }

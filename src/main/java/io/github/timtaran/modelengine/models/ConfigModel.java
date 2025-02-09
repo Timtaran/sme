@@ -1,4 +1,4 @@
-package io.github.timtaran.modelengine.objects;
+package io.github.timtaran.modelengine.models;
 
 import lombok.Getter;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -7,7 +7,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 @Getter
-public class ConfigObject {
+public class ConfigModel {
   private boolean generatePackOnLoad = true;
   private boolean loadModelsOnLoad = true;
 }

@@ -8,9 +8,9 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import io.github.timtaran.modelengine.Plugin;
 import io.github.timtaran.modelengine.generators.PackGenerator;
 import io.github.timtaran.modelengine.loaders.ModelLoader;
-import io.github.timtaran.modelengine.objects.ModelObject;
-import io.github.timtaran.modelengine.objects.blockbench.BbModelObject;
-import io.github.timtaran.modelengine.objects.blockbench.GroupObject;
+import io.github.timtaran.modelengine.models.Model;
+import io.github.timtaran.modelengine.models.blockbench.BbModel;
+import io.github.timtaran.modelengine.models.blockbench.ModelGroup;
 import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -42,12 +42,12 @@ public class ModelCommands {
   private static void spawnModel(Player player, CommandArguments args) {
     String modelName = (String) args.get("model_name");
 
-    ModelObject modelObject = ModelLoader.getLoadedModels().get(modelName);
-    if (modelObject != null) {
-      BbModelObject bbModelObject = modelObject.getBbModel();
+    Model model = ModelLoader.getLoadedModels().get(modelName);
+    if (model != null) {
+      BbModel bbModel = model.getBbModel();
       Location location = (Location) Objects.requireNonNull(args.get("location"));
 
-      for (GroupObject group : bbModelObject.getAllGroups()) {
+      for (ModelGroup group : bbModel.getAllGroups()) {
         player.sendMessage(
             Component.text("[DEV]", NamedTextColor.GREEN)
                 .append(Component.text(" spawning " + group.name(), NamedTextColor.WHITE)));

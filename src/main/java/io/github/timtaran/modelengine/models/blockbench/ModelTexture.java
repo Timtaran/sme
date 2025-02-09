@@ -1,4 +1,4 @@
-package io.github.timtaran.modelengine.objects.blockbench;
+package io.github.timtaran.modelengine.models.blockbench;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings("unused")
 @Getter
-public class TextureObject {
+public class ModelTexture {
   private String id;
   private String name;
   private String uuid;

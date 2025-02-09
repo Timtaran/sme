@@ -1,4 +1,4 @@
-package io.github.timtaran.modelengine.objects.blockbench;
+package io.github.timtaran.modelengine.models.blockbench;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,12 +8,12 @@ import lombok.Getter;
 @SuppressWarnings({"FieldMayBeFinal", "unused"})
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class OutlinerObject {
+public class ModelOutliner {
   private String name = "";
   private String uuid;
   private double[] origin;
 
-  private OutlinerObject[] children = new OutlinerObject[0];
+  private ModelOutliner[] children = new ModelOutliner[0];
 
   private boolean isObject = false;
 
@@ -22,11 +22,11 @@ public class OutlinerObject {
    * process all unserializable objects here.
    *
    * @param data data from jackson
-   * @return {@link OutlinerObject} outliner object
+   * @return {@link ModelOutliner} outliner object
    */
   @JsonCreator
-  public static OutlinerObject fromJson(String data) {
-    OutlinerObject outlinerObject = new OutlinerObject();
+  public static ModelOutliner fromJson(String data) {
+    ModelOutliner outlinerObject = new ModelOutliner();
 
     outlinerObject.uuid = data;
     outlinerObject.isObject = true;
