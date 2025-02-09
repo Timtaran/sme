@@ -22,12 +22,17 @@ repositories {
         name = "codemc"
         url = uri("https://repo.codemc.org/repository/maven-public/" )
     }
+    maven {
+        name = "sonatype"
+        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+    }
 }
 
 dependencies {
     implementation("org.spongepowered:configurate-yaml:4.0.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.1")
     implementation("com.google.guava:guava:33.4.0-jre")
+    implementation("org.joml:joml:1.10.8")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("dev.jorel:commandapi-bukkit-core:9.7.0")
 
